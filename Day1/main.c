@@ -4,43 +4,41 @@
 #include "string.h"
 
 int main() {
-  FILE *file;
-  char buf[255];
+  FILE* file;
+  char buf[100];
   int total = 0;
+  int count = 0;
 
-  file = fopen("test.txt", "r");
+  file = fopen("input.txt", "r");
 
-  while (fscanf(file, "%s\n", buf) == 1) {
+  while (fscanf(file, "%s", buf) == 1) {
+    count++;
     int s = strlen(buf);
-    char nums[2] = "\0";
+    char f;
+    char l;
 
     for (int i = 0; i < s; i++) {
-      char derp = buf[i];
-      if (isdigit(derp)) {
-        printf("%s\n", &derp);
-        nums[0] = derp;
+      if (isdigit(buf[i])) {
+        f = buf[i];
         break;
       }
     }
 
-    for (int i = s - 1; i >= 0; i--) {
-      char derp = buf[i];
-      if (isdigit(derp)) {
-        printf("%s\n", &derp);
-        nums[1] = derp;
+    for (int i = s - 1; i > -1; i--) {
+      if (isdigit(buf[i])) {
+        l = buf[i];
         break;
       }
     }
 
-    printf("%s\n", nums);
-    int num = atoi(nums);
-    printf("%d\n", num);
+    char str[2] = {f, l};
+    int num = atoi(str);
+    printf("%s -> %s - %d\n", buf, str, num);
     total += num;
-
-    return 0;
   }
 
   fclose(file);
+  printf("Lines: %d\n", count);
   printf("Sum: %d\n", total);
   return 0;
 }
