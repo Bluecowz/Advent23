@@ -3,16 +3,14 @@
 #include "stdlib.h"
 #include "string.h"
 
-int main() {
+void part_one() {
   FILE* file;
   char buf[100];
   int total = 0;
-  int count = 0;
 
   file = fopen("input.txt", "r");
 
   while (fscanf(file, "%s", buf) == 1) {
-    count++;
     int s = strlen(buf);
     char f;
     char l;
@@ -33,13 +31,26 @@ int main() {
 
     char str[2] = {f, l};
     int num = atoi(str);
-    printf("%s -> %s - %d\n", buf, str, num);
     total += num;
   }
 
   fclose(file);
-  printf("Lines: %d\n", count);
   printf("Sum: %d\n", total);
+}
+
+void part_two() {
+  FILE* file;
+  char buf[100];
+  int total = 0;
+}
+
+int main() {
+  // this is part 1
+  printf("Part One:\n");
+  part_one();
+
+  printf("\n\nPart Two:\n");
+
   return 0;
 }
 
