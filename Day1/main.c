@@ -1,37 +1,47 @@
 #include "ctype.h"
+#include "stdbool.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 
+typedef struct {
+  char* word;
+  int val;
+} word;
+
+const word words[9] = {{"one", 1},   {"two", 2},   {"three", 3},
+                       {"four", 4},  {"five", 5},  {"six", 6},
+                       {"seven", 7}, {"eight", 8}, {"nine", 9}};
+
 void part_one() {
-  FILE* file;
   char buf[100];
   int total = 0;
+  FILE* file = fopen("input.txt", "r");
 
-  file = fopen("input.txt", "r");
+  if (file == NULL) {
+    printf("Failed to open");
+    return;
+  }
 
-  while (fscanf(file, "%s", buf) == 1) {
-    int s = strlen(buf);
-    char f;
-    char l;
-
-    for (int i = 0; i < s; i++) {
+  while (fgets(buf, sizeof(buf), file) != NULL) {
+    for (int i = 0; buf[i] != '\0'; i++) {
       if (isdigit(buf[i])) {
-        f = buf[i];
+        int f = buf[i] - '0';
+        int l = buf[i] - '0';
+        while (buf[i] != '\0') {
+          if (isdigit(buf[i])) {
+            l = buf[i] - '0';
+          }
+          i++;
+        }
+
+        int num = f * 10 + l;
+        total += num;
         break;
       }
     }
 
-    for (int i = s - 1; i > -1; i--) {
-      if (isdigit(buf[i])) {
-        l = buf[i];
-        break;
-      }
-    }
-
-    char str[2] = {f, l};
-    int num = atoi(str);
-    total += num;
+    ;
   }
 
   fclose(file);
@@ -39,18 +49,45 @@ void part_one() {
 }
 
 void part_two() {
-  FILE* file;
+  int total, f, l = 0;
   char buf[100];
-  int total = 0;
-}
+  FILE* file = fopen("test_two.txt", "r");
 
-int main() {
-  // this is part 1
-  printf("Part One:\n");
-  part_one();
+  if (file == NULL) {
+    printf("Failed to open");
+    return;
+  }
 
-  printf("\n\nPart Two:\n");
+  while (fgets(buf, sizeof(buf), file) != NULL) {
+    char* checks[18] = {"one",   "two",   "three", "four", "five", "six",
+                        "seven", "eight", "nine",  "1",    "2",    "3",
+                        "4",     "5",     "6",     "7",    "8",    "9"};
+    char* nums;
+    int f, l;
+    const int blen = strlen(buf);
 
-  return 0;
-}
+    for (int i = 0; buf[i] != '\0'; i++) {
+      for (int x = 0; x < 18; x++) {
+        const int len = strlen(checks[x]);
+        if(
+      }
+    }
+
+    // fclose(file);
+    fclose(file);
+    printf("Sum: %d\n", total);
+  }
+
+  int main() {
+    // this is part 1
+    //
+
+    printf("Part One:\n");
+    part_one();
+
+    printf("\n\nPart Two:\n");
+    part_two();
+
+    return 0;
+  }
 
