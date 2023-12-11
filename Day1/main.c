@@ -4,14 +4,16 @@
 #include "stdlib.h"
 #include "string.h"
 
-typedef struct {
-  char* word;
-  int val;
-} word;
-
-const word words[9] = {{"one", 1},   {"two", 2},   {"three", 3},
-                       {"four", 4},  {"five", 5},  {"six", 6},
-                       {"seven", 7}, {"eight", 8}, {"nine", 9}};
+char* getSubstr(int pos, int len, char string[]) {
+  char* substring = malloc(len + 1);
+  int i = 0;
+  while (i < len) {
+    substring[i] = string[pos + i];
+    i++;
+  }
+  substring[len] = '\0';
+  return substring;
+}
 
 void part_one() {
   char buf[100];
@@ -49,45 +51,63 @@ void part_one() {
 }
 
 void part_two() {
-  int total, f, l = 0;
+  int total = 0;
+  int f, l = 0;
   char buf[100];
-  FILE* file = fopen("test_two.txt", "r");
+  FILE* file = fopen("input.txt", "r");
 
   if (file == NULL) {
     printf("Failed to open");
     return;
   }
 
+  char* checks[18] = {"one",   "two",   "three", "four", "five", "six",
+                      "seven", "eight", "nine",  "1",    "2",    "3",
+                      "4",     "5",     "6",     "7",    "8",    "9"};
+
   while (fgets(buf, sizeof(buf), file) != NULL) {
-    char* checks[18] = {"one",   "two",   "three", "four", "five", "six",
-                        "seven", "eight", "nine",  "1",    "2",    "3",
-                        "4",     "5",     "6",     "7",    "8",    "9"};
     char* nums;
-    int f, l;
+    int f, l = 0;
     const int blen = strlen(buf);
 
     for (int i = 0; buf[i] != '\0'; i++) {
       for (int x = 0; x < 18; x++) {
         const int len = strlen(checks[x]);
-        if(
+        if (len + i >= blen) continue;
+        char* t = getSubstr(i, len, buf);
+        if (strcmp(checks[x], t) == 0) {
+          int tmp = x;
+          if (tmp > 8) tmp -= 9;
+          tmp += 1;
+          if (f < 1) {
+            f = tmp;
+            l = tmp;
+          } else {
+            l = tmp;
+          }
+        }
+        free(t);
       }
     }
-
-    // fclose(file);
-    fclose(file);
-    printf("Sum: %d\n", total);
+    int derp = (f * 10) + l;
+    // printf("%d\n", derp);
+    total += derp;
+    f = 0;
   }
+  fclose(file);
+  printf("Sum: %d\n", total);
+}
 
-  int main() {
-    // this is part 1
-    //
+int main() {
+  // this is part 1
+  //
 
-    printf("Part One:\n");
-    part_one();
+  printf("Part One:\n");
+  part_one();
 
-    printf("\n\nPart Two:\n");
-    part_two();
+  printf("\n\nPart Two:\n");
+  part_two();
 
-    return 0;
-  }
+  return 0;
+}
 
