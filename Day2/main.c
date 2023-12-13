@@ -1,5 +1,6 @@
 #include "regex.h"
 #include "stdio.h"
+#include "stdlib.h"
 #include "string.h"
 
 void part_one() {
@@ -9,9 +10,9 @@ void part_one() {
    * 14 BLUE
    */
 
-  char buf[100];
+  char buf[100000];
   regex_t regex;
-  char* match_s = "([1-9]+ (blue|red|green))";
+  char* match_s = "(([1-9]+) (blue|red|green))";
   int value;
   const int maxGroups = 32;
   regmatch_t groupArray[maxGroups];
@@ -37,8 +38,14 @@ void part_one() {
         if (groupArray[i].rm_so == (size_t)-1) break;
 
         // use strcpy to get substring from buffer:
+        char* substr = malloc(255);
+        strncpy(substr, buf + groupArray[i].rm_so,
+                groupArray[i].rm_eo - groupArray[i].rm_so);
+        printf("Start: %d | End: %d | Value: %s\n", groupArray[i].rm_so,
+               groupArray[i].rm_eo, substr);
       }
     }
+    break;
   }
 }
 
