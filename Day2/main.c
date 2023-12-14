@@ -10,7 +10,7 @@ void part_one() {
    * 14 BLUE
    */
 
-  char buf[100000];
+  char buf[256];
   regex_t regex;
   char* match_s = "(([1-9]+) (blue|red|green))";
   int value;
@@ -31,17 +31,24 @@ void part_one() {
 
   while (fgets(buf, sizeof(buf), file) != NULL) {
     regmatch_t match;
+
     while (regexec(&regex, buf, 1, &match, 0) == 0) {
       if (match.rm_so == (size_t)-1) break;
 
       char* substr = malloc(255);
+
+      printf("Buffer: %s", buf);
       strncpy(substr, buf + match.rm_so, match.rm_eo - match.rm_so);
-      printf("Start: %d | End: %d | Value: %s\n", match.rm_so, match.rm_eo,
+      printf("Start: %d | End: %d | Value: %s\n\n", match.rm_so, match.rm_eo,
              substr);
-      strncpy(buf, buf + match.rm_eo, sizeof(buf) - match.rm_eo);
+      strncpy(buf, buf + match.rm_eo + 1, sizeof(buf) - match.rm_eo);
+
+      free(substr);
     }
     break;
   }
+
+  regfree(&regex);
 }
 
 int main() {
