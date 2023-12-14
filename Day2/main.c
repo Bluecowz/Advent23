@@ -30,20 +30,15 @@ void part_one() {
   }
 
   while (fgets(buf, sizeof(buf), file) != NULL) {
-    int rc = 0;
-    if (0 != (rc = regexec(&regex, buf, maxGroups, groupArray, 0))) {
-      printf("Failed to match '%s' with '%s', returned %d\n", match_s, buf, rc);
-    } else {
-      for (int i = 0; i < maxGroups; i++) {
-        if (groupArray[i].rm_so == (size_t)-1) break;
+    regmatch_t match;
+    while (regexec(&regex, buf, 1, &match, 0) == 0) {
+      if (match.rm_so == (size_t)-1) break;
 
-        // use strcpy to get substring from buffer:
-        char* substr = malloc(255);
-        strncpy(substr, buf + groupArray[i].rm_so,
-                groupArray[i].rm_eo - groupArray[i].rm_so);
-        printf("Start: %d | End: %d | Value: %s\n", groupArray[i].rm_so,
-               groupArray[i].rm_eo, substr);
-      }
+      char* substr = malloc(255);
+      strncpy(substr, buf + match.rm_so, match.rm_eo - match.rm_so);
+      printf("Start: %d | End: %d | Value: %s\n", match.rm_so, match.rm_eo,
+             substr);
+      strncpy(buf, buf + match.rm_eo, sizeof(buf) - match.rm_eo);
     }
     break;
   }
